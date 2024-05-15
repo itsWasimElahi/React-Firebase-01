@@ -1,6 +1,6 @@
 // import { auth, googleProvider } from "../config/firebase";
 // import {
-//   createUserWithEmailAndPassword,  
+//   createUserWithEmailAndPassword,
 //   signInWithPopup,
 //   signOut,
 // } from "firebase/auth";
@@ -56,7 +56,6 @@
 //   );
 // };
 
-
 import { auth, googleProvider } from "../config/firebase";
 import {
   createUserWithEmailAndPassword,
@@ -72,6 +71,7 @@ export const Auth = () => {
   const signIn = async () => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      alert("Signed in successfully!");
     } catch (err) {
       console.error(err);
     }
@@ -80,6 +80,8 @@ export const Auth = () => {
   const signInWithGoogle = async () => {
     try {
       await signInWithPopup(auth, googleProvider);
+      alert("Signed in successfully!");
+
     } catch (err) {
       console.error(err);
     }
@@ -88,13 +90,28 @@ export const Auth = () => {
   const logout = async () => {
     try {
       await signOut(auth);
+      alert("Logged Out successfully!");
+
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div style={{ textAlign: "center", marginTop: "50px" }}>
+    <div
+      style={{
+        textAlign: "center",
+        marginTop: "50px",
+        marginBottom:"5%",
+        display: "flex",
+        position: "relative",
+        left: "18rem",
+        overflow: "hidden",
+        border: "3px solid black",
+        width: "65%",
+        height: "10%",
+      }}
+    >
       <input
         style={{
           padding: "10px",
@@ -106,7 +123,7 @@ export const Auth = () => {
         placeholder="Email..."
         onChange={(e) => setEmail(e.target.value)}
       />
-      <br />
+
       <input
         style={{
           padding: "10px",
@@ -119,7 +136,6 @@ export const Auth = () => {
         type="password"
         onChange={(e) => setPassword(e.target.value)}
       />
-      <br />
       <button
         style={{
           margin: "10px",
@@ -136,7 +152,7 @@ export const Auth = () => {
       <button
         style={{
           margin: "10px",
-          backgroundColor: "#dc3545",
+          backgroundColor: "green",
           color: "#fff",
           border: "none",
           padding: "10px 20px",
@@ -149,7 +165,7 @@ export const Auth = () => {
       <button
         style={{
           margin: "10px",
-          backgroundColor: "#28a745",
+          backgroundColor: "#dc3545",
           color: "#fff",
           border: "none",
           padding: "10px 20px",

@@ -3,9 +3,9 @@
 // import { Auth } from "./components/auth";
 // import { db, auth, storage } from "./config/firebase";
 // import {
-//   getDocs,    // to get data from database 
-//   collection, // from which collections of data base 
-//   addDoc, 
+//   getDocs,    // to get data from database
+//   collection, // from which collections of data base
+//   addDoc,
 //   deleteDoc,
 //   updateDoc,
 //   doc,
@@ -41,8 +41,8 @@
 //       console.error(err);
 //     }
 //   };
- 
-//   // we are using useEffect bcz we will be wanting that on rendering page our database bata shoul be available on our site 
+
+//   // we are using useEffect bcz we will be wanting that on rendering page our database bata shoul be available on our site
 //   useEffect(() => {
 //     getMovieList();
 //   }, []);
@@ -98,7 +98,7 @@
 //         <input
 //           type="checkbox"
 //           checked={isNewMovieOscar}
-//           onChange={(e) => setIsNewMovieOscar(e.target.checked)}   // this just making checkbox unchecked to checked  
+//           onChange={(e) => setIsNewMovieOscar(e.target.checked)}   // this just making checkbox unchecked to checked
 //         />
 //         <label> Received an Oscar</label>
 //         <button onClick={onSubmitMovie}> Submit Movie</button>
@@ -117,7 +117,7 @@
 //               placeholder="new title..."
 //               onChange={(e) => setUpdatedTitle(e.target.value)}
 //             />
-//             <button onClick={() => updateMovieTitle(movie.id)}>  {/* is id wali movie k liye naya title jo likha wo update krdo*/} 
+//             <button onClick={() => updateMovieTitle(movie.id)}>  {/* is id wali movie k liye naya title jo likha wo update krdo*/}
 //               Update Title
 //             </button>
 //           </div>
@@ -133,9 +133,6 @@
 // }
 
 // export default App;
-
-
-
 
 import { useEffect, useState } from "react";
 import "./App.css";
@@ -201,11 +198,13 @@ function App() {
   const deleteMovie = async (id) => {
     const movieDoc = doc(db, "movies", id);
     await deleteDoc(movieDoc);
+    getMovieList();
   };
 
   const updateMovieTitle = async (id) => {
     const movieDoc = doc(db, "movies", id);
     await updateDoc(movieDoc, { title: updatedTitle });
+    getMovieList();
   };
 
   const uploadFile = async () => {
@@ -250,23 +249,57 @@ function App() {
           checked={isNewMovieOscar}
           onChange={(e) => setIsNewMovieOscar(e.target.checked)}
         />
-        <label> Received an Oscar</label> <br/>
+        <label> Received an Oscar</label> <br />
         <button
           style={{
+            display: "flex",
+            position: "relative",
+            left: "29.4rem",
             backgroundColor: "#007bff",
             color: "white",
             padding: "10px 20px",
             border: "none",
             borderRadius: "5px",
             margin: "5px",
+            marginBottom: "5%",
             cursor: "pointer",
           }}
           onClick={onSubmitMovie}
         >
           Submit Movie
         </button>
+        <div
+          style={{
+            fontSize:"200%",
+            color:"grey",
+            display: "flex",
+            flexDirection: "column",
+            justifyItems: "centre",
+            alignItems: "centre",
+            position: "relative",
+            left: "23rem",
+            overflow: "hidden",
+            border: "3px solid #ccc",
+            width: "50%",
+            height: "30%",
+          }}
+        >
+          <h1> Your List of Movies is Below </h1>
+        </div>
       </div>
-      <div>
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyItems: "centre",
+          alignItems: "centre",
+          position: "relative",
+          left: "23rem",
+          border: "3px solid cyan",
+          width: "50%",
+          height: "30%",
+        }}
+      >
         {movieList.map((movie) => (
           <div key={movie.id}>
             <h1 style={{ color: movie.receivedAnOscar ? "green" : "red" }}>
@@ -317,7 +350,17 @@ function App() {
         ))}
       </div>
 
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          position: "relative",
+          left: "22.2rem",
+          width: "51.1%",
+          marginBottom:"70px",
+          // border:"3px solid black",
+        }}
+      >
         <input
           style={{ margin: "10px" }}
           type="file"
@@ -328,7 +371,6 @@ function App() {
             backgroundColor: "#ffc107",
             color: "white",
             padding: "10px 20px",
-            border: "none",
             borderRadius: "5px",
             margin: "5px",
             cursor: "pointer",
