@@ -199,19 +199,25 @@ function App() {
     const movieDoc = doc(db, "movies", id);
     await deleteDoc(movieDoc);
     getMovieList();
+    alert("Movie Deleted successfully!");
+
   };
 
   const updateMovieTitle = async (id) => {
     const movieDoc = doc(db, "movies", id);
     await updateDoc(movieDoc, { title: updatedTitle });
     getMovieList();
+    alert("Title Updated successfully!");
+
   };
 
   const uploadFile = async () => {
     if (!fileUpload) return;
     const filesFolderRef = ref(storage, `projectFiles/${fileUpload.name}`);
     try {
+      alert("file Uploaded successfully!");
       await uploadBytes(filesFolderRef, fileUpload);
+
     } catch (err) {
       console.error(err);
     }
