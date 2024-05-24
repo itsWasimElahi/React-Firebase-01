@@ -134,6 +134,264 @@
 
 // export default App;
 
+// import { useEffect, useState } from "react";
+// import "./App.css";
+// import { Auth } from "./components/auth";
+// import { db, auth, storage } from "./config/firebase";
+// import {
+//   getDocs,
+//   collection,
+//   addDoc,
+//   deleteDoc,
+//   updateDoc,
+//   doc,
+// } from "firebase/firestore";
+// import { ref, uploadBytes } from "firebase/storage";
+
+// function App() {
+//   const [movieList, setMovieList] = useState([]);
+
+//   // New Movie States
+//   const [newMovieTitle, setNewMovieTitle] = useState("");
+//   const [newReleaseDate, setNewReleaseDate] = useState(0);
+//   const [isNewMovieOscar, setIsNewMovieOscar] = useState(false);
+
+//   // Update Title State
+//   const [updatedTitle, setUpdatedTitle] = useState("");
+
+//   // File Upload State
+//   const [fileUpload, setFileUpload] = useState(null);
+
+//   const moviesCollectionRef = collection(db, "movies");
+
+//   const getMovieList = async () => {
+//     try {
+//       const data = await getDocs(moviesCollectionRef);
+//       const filteredData = data.docs.map((doc) => ({
+//         ...doc.data(),
+//         id: doc.id,
+//       }));
+//       setMovieList(filteredData);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   useEffect(() => {
+//     getMovieList();
+//   }, []);
+
+//   const onSubmitMovie = async () => {
+//     try {
+//       await addDoc(moviesCollectionRef, {
+//         title: newMovieTitle,
+//         releaseDate: newReleaseDate,
+//         receivedAnOscar: isNewMovieOscar,
+//         userId: auth?.currentUser?.uid,
+//       });
+//       getMovieList();
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   const deleteMovie = async (id) => {
+//     const movieDoc = doc(db, "movies", id);
+//     await deleteDoc(movieDoc);
+//     getMovieList();
+//     alert("Movie Deleted successfully!");
+//   };
+
+//   const updateMovieTitle = async (id) => {
+//     const movieDoc = doc(db, "movies", id);
+//     await updateDoc(movieDoc, { title: updatedTitle });
+//     getMovieList();
+//     alert("Title Updated successfully!");
+//   };
+
+//   const uploadFile = async () => {
+//     if (!fileUpload) return;
+//     const filesFolderRef = ref(storage, `projectFiles/${fileUpload.name}`);
+//     try {
+//       alert("file Uploaded successfully!");
+//       await uploadBytes(filesFolderRef, fileUpload);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   return (
+//     <div
+//       className="App">
+//       <Auth />
+
+//       <div>
+//         <input
+//           style={{
+//             padding: "10px",
+//             margin: "5px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//           placeholder="Movie title..."
+//           onChange={(e) => setNewMovieTitle(e.target.value)}
+//         />
+//         <input
+//           style={{
+//             padding: "10px",
+//             margin: "5px",
+//             borderRadius: "5px",
+//             border: "1px solid #ccc",
+//           }}
+//           placeholder="Release Date..."
+//           type="number"
+//           onChange={(e) => setNewReleaseDate(Number(e.target.value))}
+//         />
+//         <input
+//           style={{ margin: "5px" }}
+//           type="checkbox"
+//           checked={isNewMovieOscar}
+//           onChange={(e) => setIsNewMovieOscar(e.target.checked)}
+//         />
+//         <label> Received an Oscar</label> <br />
+//         <button
+//           style={{
+//             display: "flex",
+//             position: "relative",
+//             left: "29.4rem",
+//             backgroundColor: "#007bff",
+//             color: "white",
+//             padding: "10px 20px",
+//             border: "none",
+//             borderRadius: "5px",
+//             margin: "5px",
+//             marginBottom: "5%",
+//             cursor: "pointer",
+//           }}
+//           onClick={onSubmitMovie}
+//         >
+//           Submit Movie
+//         </button>
+//         <div
+//           style={{
+//             fontSize: "200%",
+//             color: "grey",
+//             display: "flex",
+//             flexDirection: "column",
+//             justifyItems: "centre",
+//             alignItems: "centre",
+//             position: "relative",
+//             left: "23rem",
+//             overflow: "hidden",
+//             border: "3px solid #ccc",
+//             width: "50%",
+//             height: "30%",
+//           }}
+//         >
+//           <h1> Your List of Movies is Below </h1>
+//         </div>
+//       </div>
+//       <div
+//         style={{
+//           display: "flex",
+//           flexDirection: "column",
+//           justifyItems: "centre",
+//           alignItems: "centre",
+//           position: "relative",
+//           left: "23rem",
+//           border: "3px solid cyan",
+//           width: "50%",
+//           height: "30%",
+//         }}
+//       >
+//         {movieList.map((movie) => (
+//           <div key={movie.id}>
+//             <h1 style={{ color: movie.receivedAnOscar ? "green" : "red" }}>
+//               {movie.title}
+//             </h1>
+//             <p> Date: {movie.releaseDate} </p>
+
+//             <button
+//               style={{
+//                 backgroundColor: "#dc3545",
+//                 color: "white",
+//                 padding: "10px 20px",
+//                 border: "none",
+//                 borderRadius: "5px",
+//                 margin: "5px",
+//                 cursor: "pointer",
+//               }}
+//               onClick={() => deleteMovie(movie.id)}
+//             >
+//               Delete Movie
+//             </button>
+
+//             <input
+//               style={{
+//                 padding: "10px",
+//                 margin: "5px",
+//                 borderRadius: "5px",
+//                 border: "1px solid #ccc",
+//               }}
+//               placeholder="new title..."
+//               onChange={(e) => setUpdatedTitle(e.target.value)}
+//             />
+//             <button
+//               style={{
+//                 backgroundColor: "#28a745",
+//                 color: "white",
+//                 padding: "10px 20px",
+//                 border: "none",
+//                 borderRadius: "5px",
+//                 margin: "5px",
+//                 cursor: "pointer",
+//               }}
+//               onClick={() => updateMovieTitle(movie.id)}
+//             >
+//               Update Title
+//             </button>
+//           </div>
+//         ))}
+//       </div>
+
+//       <div
+//         style={{
+//           display: "flex",
+//           justifyContent: "space-between",
+//           position: "relative",
+//           left: "22.2rem",
+//           width: "51.1%",
+//           marginBottom: "70px",
+//           // border:"3px solid black",
+//         }}
+//       >
+//         <input
+//           style={{ margin: "10px" }}
+//           type="file"
+//           onChange={(e) => setFileUpload(e.target.files[0])}
+//         />
+//         <button
+//           style={{
+//             backgroundColor: "#ffc107",
+//             color: "white",
+//             padding: "10px 20px",
+//             borderRadius: "5px",
+//             margin: "5px",
+//             cursor: "pointer",
+//           }}
+//           onClick={uploadFile}
+//         >
+//           Upload File
+//         </button>
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default App;
+
+
+
 import { useEffect, useState } from "react";
 import "./App.css";
 import { Auth } from "./components/auth";
@@ -200,7 +458,6 @@ function App() {
     await deleteDoc(movieDoc);
     getMovieList();
     alert("Movie Deleted successfully!");
-
   };
 
   const updateMovieTitle = async (id) => {
@@ -208,7 +465,6 @@ function App() {
     await updateDoc(movieDoc, { title: updatedTitle });
     getMovieList();
     alert("Title Updated successfully!");
-
   };
 
   const uploadFile = async () => {
@@ -217,170 +473,112 @@ function App() {
     try {
       alert("file Uploaded successfully!");
       await uploadBytes(filesFolderRef, fileUpload);
-
     } catch (err) {
       console.error(err);
     }
   };
 
   return (
-    <div className="App">
+    <div className="App flex flex-col items-center p-4">
       <Auth />
 
-      <div>
+      <div className="flex flex-col items-center w-full max-w-md space-y-4">
         <input
-          style={{
-            padding: "10px",
-            margin: "5px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
+          className="p-2 border rounded w-full"
           placeholder="Movie title..."
           onChange={(e) => setNewMovieTitle(e.target.value)}
         />
         <input
-          style={{
-            padding: "10px",
-            margin: "5px",
-            borderRadius: "5px",
-            border: "1px solid #ccc",
-          }}
+          className="p-2 border rounded w-full"
           placeholder="Release Date..."
           type="number"
           onChange={(e) => setNewReleaseDate(Number(e.target.value))}
         />
-        <input
-          style={{ margin: "5px" }}
-          type="checkbox"
-          checked={isNewMovieOscar}
-          onChange={(e) => setIsNewMovieOscar(e.target.checked)}
-        />
-        <label> Received an Oscar</label> <br />
+        <div className="flex items-center space-x-2">
+          <input
+            type="checkbox"
+            checked={isNewMovieOscar}
+            onChange={(e) => setIsNewMovieOscar(e.target.checked)}
+          />
+          <label>Received an Oscar</label>
+        </div>
         <button
-          style={{
-            display: "flex",
-            position: "relative",
-            left: "29.4rem",
-            backgroundColor: "#007bff",
-            color: "white",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            margin: "5px",
-            marginBottom: "5%",
-            cursor: "pointer",
-          }}
+          className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-700"
           onClick={onSubmitMovie}
         >
           Submit Movie
         </button>
-        <div
-          style={{
-            fontSize:"200%",
-            color:"grey",
-            display: "flex",
-            flexDirection: "column",
-            justifyItems: "centre",
-            alignItems: "centre",
-            position: "relative",
-            left: "23rem",
-            overflow: "hidden",
-            border: "3px solid #ccc",
-            width: "50%",
-            height: "30%",
-          }}
-        >
-          <h1> Your List of Movies is Below </h1>
+        <div className="text-gray-500 text-lg border-t pt-4 w-full">
+          <h1>Your List of Movies is Below</h1>
         </div>
       </div>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          justifyItems: "centre",
-          alignItems: "centre",
-          position: "relative",
-          left: "23rem",
-          border: "3px solid cyan",
-          width: "50%",
-          height: "30%",
-        }}
-      >
+{/* 
+      <div className="flex flex-col items-center w-full max-w-md space-y-4 mt-4 border-t pt-4">
         {movieList.map((movie) => (
-          <div key={movie.id}>
-            <h1 style={{ color: movie.receivedAnOscar ? "green" : "red" }}>
+          <div key={movie.id} className="w-full">
+            <h1 className={`text-xl ${movie.receivedAnOscar ? "text-green-500" : "text-red-500"}`}>
               {movie.title}
             </h1>
-            <p> Date: {movie.releaseDate} </p>
-
+            <p>Date: {movie.releaseDate}</p>
             <button
-              style={{
-                backgroundColor: "#dc3545",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                margin: "5px",
-                cursor: "pointer",
-              }}
+              className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 mt-2"
               onClick={() => deleteMovie(movie.id)}
             >
               Delete Movie
             </button>
-
             <input
-              style={{
-                padding: "10px",
-                margin: "5px",
-                borderRadius: "5px",
-                border: "1px solid #ccc",
-              }}
+              className="p-2 border rounded w-full mt-2"
               placeholder="new title..."
               onChange={(e) => setUpdatedTitle(e.target.value)}
             />
             <button
-              style={{
-                backgroundColor: "#28a745",
-                color: "white",
-                padding: "10px 20px",
-                border: "none",
-                borderRadius: "5px",
-                margin: "5px",
-                cursor: "pointer",
-              }}
+              className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700 mt-2"
               onClick={() => updateMovieTitle(movie.id)}
             >
               Update Title
             </button>
           </div>
         ))}
-      </div>
+      </div> */}
 
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          position: "relative",
-          left: "22.2rem",
-          width: "51.1%",
-          marginBottom:"70px",
-          // border:"3px solid black",
-        }}
-      >
+      <div className="flex flex-col items-center w-full max-w-md space-y-4 mt-4 border-t pt-4">
+  {movieList.map((movie) => (
+    <div key={movie.id} className="w-full mb-4 p-4 border rounded">
+      <h1 className={`text-xl ${movie.receivedAnOscar ? "text-green-500" : "text-red-500"}`}>
+        {movie.title}
+      </h1>
+      <p>Date: {movie.releaseDate}</p>
+      <div className="flex flex-col space-y-2">
         <input
-          style={{ margin: "10px" }}
+          className="p-2 border rounded w-full"
+          placeholder="new title..."
+          onChange={(e) => setUpdatedTitle(e.target.value)}
+        />
+        <button
+          className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-700"
+          onClick={() => updateMovieTitle(movie.id)}
+        >
+          Update Title
+        </button>
+        <button
+          className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-700 mt-2"
+          onClick={() => deleteMovie(movie.id)}
+        >
+          Delete Movie
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
+      <div className="flex flex-col items-center w-full max-w-md space-y-4 mt-4 border-t pt-4">
+        <input
+          className="w-full p-2 border rounded"
           type="file"
           onChange={(e) => setFileUpload(e.target.files[0])}
         />
         <button
-          style={{
-            backgroundColor: "#ffc107",
-            color: "white",
-            padding: "10px 20px",
-            borderRadius: "5px",
-            margin: "5px",
-            cursor: "pointer",
-          }}
+          className="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-700"
           onClick={uploadFile}
         >
           Upload File
@@ -391,3 +589,4 @@ function App() {
 }
 
 export default App;
+
